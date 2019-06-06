@@ -79,24 +79,39 @@ and ask if they want to play again. If not, set playAgain false and move to ques
 from questions 1-5.
 */
 
-if (playGame) {
-  //question 1 - 5
-  for (i = 0; i < questionList.length; i++) {
-    var answerProper = false;
-    while (answerProper === false) {
-      inputYN = prompt(questionList[i]);
-      inputAdjust = inputYN.toUpperCase().charAt(0);
-      if (inputAdjust !== 'Y' && inputAdjust !== 'N'){
-        alert(userReminder);
-      } else if (inputAdjust === 'Y') {
-        alert(answerList[i][0]);
-        answerProper = true;
-      } else {
-        alert(answerList[i][1]);
-        answerProper = true;
-      }
+
+// this function takes in a string and check if that string starts with a y or n. THen either return false or the letter y or n
+
+var stringCheck = function(string) { 
+  var stringAdjust = string.toUpperCase().charAt(0);
+  if (stringAdjust === 'Y' || stringAdjust ==='N') { 
+    return stringAdjust;
+  } else { 
+    return false;
+  }
+}
+
+// Use a for loop to loop through questions 1 and 5 
+var q1to5 = function() { 
+  for (var i = 0; i < questionList.length; i++) { 
+    inputYN = stringCheck(prompt(questionList[i]));
+    if (inputYN === false) { 
+      alert(userReminder);
+    } else if (inputYN === 'Y') { 
+      alert(answerList[i][0]);
+    } else { 
+      alert(answerList[i][1]);
     }
   }
+}
+
+
+
+if (playGame) {
+  
+  //question 1 - 5
+  q1to5();
+  
   //question 6
   while (guessq6 < 4 && playAgain6 === true) {
     userNum6 = prompt('Pretend you\'re 5 years old for a sec and guess a number between 0 and 20: ');
