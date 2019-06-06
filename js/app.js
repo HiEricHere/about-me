@@ -32,7 +32,23 @@ var responseGreater = 'Shooting too high! ';
 var responseLower = 'Need to go higher than that';
 var responseWin = 'Hey congrats you\'re like a psychic or something. Go again? (Y/N)';
 var responseLose = 'Looks like you\'re not going to be bending spoons anytime soon. Try again? (Y/N)';
-var playAgain = true;
+var playAgain6 = true;
+//question 7 variables
+var playAgain7 = true;
+var answer7 = [];
+var preNum7;
+var n;
+var dupeCount = 0;
+var userAnswer7 = [];
+var userPreNum7;
+var userName;
+var welcome1 = 'What was your name again? I forgot. Maybe again. I hope it\'s not too long or difficult.';
+var welcome2 = 'Thanks, ' + userName + ', I totally won\'t stalk your social media now. I\'m thinking of 5 numbers between 0 and 10. Give me 5 different numbers one at a time, and we\'ll see how many you can get right.';
+var question7 = 'I have ' + userAnswer7.length + ' number(s) right now, need ' + (5 - userAnswer7.length) + ' more: ';
+var userReminder7 = 'Give me different numbers that are between 0 and 10';
+var score = 0;
+var scoreCard = 'So, ' + userName + ', it looks like you got ' + score + ' out of ' + answer7.length + ' right. Whoever coded me is too tired to check if that\'s impressive or not so pat yourself on the back for a participation reward. Do you want to play again? (Y/N): ';
+
 var playGame;
 playGame = confirm('Press OK to guess some silly things about me!');
 console.log('User decided to play: ', playGame);
@@ -82,7 +98,7 @@ if (playGame) {
     }
   }
   //question 6
-  while (guessq6 < 5 && playAgain === true) {
+  while (guessq6 < 4 && playAgain6 === true) {
     userNum6 = prompt('Pretend you\'re 5 years old for a sec and guess a number between 0 and 20: ');
     numberProper = parseInt(userNum6, 10);
     console.log('adjusted number: ', numberProper);
@@ -102,7 +118,7 @@ if (playGame) {
           console.log('new number is :', answer6);
           answerProper = true;
         } else {
-          playAgain = false;
+          playAgain6 = false;
           answerProper = true;
         }
       }
@@ -126,13 +142,87 @@ if (playGame) {
           console.log('new number is :', answer6);
           answerProper = true;
         } else {
-          playAgain = false;
+          playAgain6 = false;
           answerProper = true;
         }
       }
     }
   }
+  //question 7
+  /*
+  generate 5 numbers between 0 and 10 using a for loop and push into an array. check if a number is being double counted.
+  prompt user for name and 5 numbers between 0 and 10. check if number is valid: integer and between 0 and 10.
+  push user numbers into an array and match against winning number array. +1 score for each correct guess.
+  Give user score report with their name and score. Ask if they want to play again.*/
+  while (playAgain7 === true) {
+    //create hidden answer array
+    while (answer7.length < 5) {
+      preNum7 = Math.floor(Math.random() * 11);
+      for (n = 0; n <= answer7.length; n++) {
+        if (preNum7 === answer7[n]) {
+          dupeCount++;
+        }
+      }
+      if (dupeCount > 0) {
+        dupeCount = 0;
+      } else {
+        answer7.push(preNum7);
+      }
+    }
+    //create user answer array
+    //userName = prompt(welcome1);
+    userName = prompt(welcome1);
+    console.log(userName);
+    alert(welcome2);
+    while (userAnswer7.length < 5) {
+      userPreNum7 = prompt(question7);
+      numberProper = parseInt(userPreNum7, 10);
+      if (isNaN(numberProper) || numberProper > 10) {
+        alert(userReminder7);
+      } else {
+        for (n = 0; n <= userAnswer7.length; n++) {
+          if (userPreNum7 === userAnswer7[n]) {
+            dupeCount++;
+          }
+        }
+        if (dupeCount > 0) {
+          dupeCount = 0;
+          alert(userReminder7);
+        } else {
+          userAnswer7.push(userPreNum7);
+          console.log((5-userAnswer7.length));
+        }
+      }
+    }
+    /* testing array for loop
+    var x;
+    for (x = 0; x < userAnswer7.length; x++) {
+      console.log(userAnswer7[x]);
+    }
+    */
+    //check hidden answers against user answers
+    for(n = 0; n < answer7.length; n++) {
+      if(answer7[n] === userAnswer7) {
+        score = score + 1;
+      }
+    }
+    //show score results and restart
+    answerProper = false;
+    while (answerProper === false) {
+      inputYN = prompt(scoreCard);
+      inputAdjust = inputYN.toUpperCase().charAt(0);
+      if (inputAdjust !== 'Y' && inputAdjust !== 'N'){
+        alert(userReminder);
+      } else if (inputAdjust === 'Y') {
+        for(n = 0; n < 5; n++) {
+          answer7.shift();
+          userAnswer7.shift();
+        }
+        answerProper = true;
+      } else {
+        playAgain7 = false;
+        answerProper = true;
+      }
+    }
+  }
 }
-
-
-
