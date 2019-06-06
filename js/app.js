@@ -23,7 +23,8 @@ var inputAdjust;
 var i;
 //question 6 variables
 //formula for random number between 0 - 20 inclusive taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-var answer6 = Math.floor(Math.random() * (21));
+//var answer6 = Math.floor(Math.random() * (21));
+var answer6 = 5;
 var guessq6 = 0;
 var userNum6;
 var userReminder6 = 'Has to be a whole number and between 0 and 20, by the way.';
@@ -43,11 +44,8 @@ var userAnswer7 = [];
 var userPreNum7;
 var userName;
 var welcome1 = 'What was your name again? I forgot. Maybe again. I hope it\'s not too long or difficult.';
-var welcome2 = 'Thanks, ' + userName + ', I totally won\'t stalk your social media now. I\'m thinking of 5 numbers between 0 and 10. Give me 5 different numbers one at a time, and we\'ll see how many you can get right.';
-var question7 = 'I have ' + userAnswer7.length + ' number(s) right now, need ' + (5 - userAnswer7.length) + ' more: ';
 var userReminder7 = 'Give me different numbers that are between 0 and 10';
 var score = 0;
-var scoreCard = 'So, ' + userName + ', it looks like you got ' + score + ' out of ' + answer7.length + ' right. Whoever coded me is too tired to check if that\'s impressive or not so pat yourself on the back for a participation reward. Do you want to play again? (Y/N): ';
 
 var playGame;
 playGame = confirm('Press OK to guess some silly things about me!');
@@ -105,15 +103,9 @@ var q1to5 = function() {
   }
 }
 
-
-
-if (playGame) {
-  
-  //question 1 - 5
-  q1to5();
-  
-  //question 6
-  while (guessq6 < 4 && playAgain6 === true) {
+// check user input to see if they get the right random number or not. Tell them if the guess is too high or low or NaN or more than 20. THen ask if they want to play again after the game is over. 
+var q6 = function() { 
+  while (guessq6 < 5 && playAgain6 === true) {
     userNum6 = prompt('Pretend you\'re 5 years old for a sec and guess a number between 0 and 20: ');
     numberProper = parseInt(userNum6, 10);
     console.log('adjusted number: ', numberProper);
@@ -163,7 +155,10 @@ if (playGame) {
       }
     }
   }
-  //question 7
+}
+
+var q7 = function() { 
+   //question 7
   /*
   generate 5 numbers between 0 and 10 using a for loop and push into an array. check if a number is being double counted.
   prompt user for name and 5 numbers between 0 and 10. check if number is valid: integer and between 0 and 10.
@@ -184,19 +179,20 @@ if (playGame) {
         answer7.push(preNum7);
       }
     }
+    console.log(answer7);
     //create user answer array
     //userName = prompt(welcome1);
     userName = prompt(welcome1);
     console.log(userName);
-    alert(welcome2);
+    alert('Thanks, ' + userName + ', I totally won\'t stalk your social media now. I\'m thinking of 5 numbers between 0 and 10. Give me 5 different numbers one at a time, and we\'ll see how many you can get right.');
     while (userAnswer7.length < 5) {
-      userPreNum7 = prompt(question7);
+      userPreNum7 = prompt('I have ' + userAnswer7.length + ' number(s) right now, need ' + (5 - userAnswer7.length) + ' more: ');
       numberProper = parseInt(userPreNum7, 10);
       if (isNaN(numberProper) || numberProper > 10) {
         alert(userReminder7);
       } else {
         for (n = 0; n <= userAnswer7.length; n++) {
-          if (userPreNum7 === userAnswer7[n]) {
+          if (numberProper === userAnswer7[n]) {
             dupeCount++;
           }
         }
@@ -204,8 +200,7 @@ if (playGame) {
           dupeCount = 0;
           alert(userReminder7);
         } else {
-          userAnswer7.push(userPreNum7);
-          console.log((5-userAnswer7.length));
+          userAnswer7.push(numberProper);
         }
       }
     }
@@ -217,14 +212,17 @@ if (playGame) {
     */
     //check hidden answers against user answers
     for(n = 0; n < answer7.length; n++) {
-      if(answer7[n] === userAnswer7) {
-        score = score + 1;
+      for (var x = 0; x < userAnswer7.length; x++) {
+        if(answer7[n] === userAnswer7[x]) {
+          score = score + 1;
+        }
       }
     }
+    console.log(score);
     //show score results and restart
     answerProper = false;
     while (answerProper === false) {
-      inputYN = prompt(scoreCard);
+      inputYN = prompt('So, ' + userName + ', it looks like you got ' + score + ' out of ' + answer7.length + ' right. Whoever coded me is too tired to check if that\'s impressive or not so pat yourself on the back for a participation reward. Do you want to play again? (Y/N): ');
       inputAdjust = inputYN.toUpperCase().charAt(0);
       if (inputAdjust !== 'Y' && inputAdjust !== 'N'){
         alert(userReminder);
@@ -240,4 +238,17 @@ if (playGame) {
       }
     }
   }
+}
+
+var answerProper;
+
+if (playGame) {
+  
+  //question 1 - 5
+  q1to5();
+  
+  // //question 6
+  q6();
+  q7();
+ 
 }
