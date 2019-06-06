@@ -14,6 +14,29 @@ margin-bottom: 10px;
 margin-right: 10px;
 }
 
+#sidelist {
+    background-color: rgb(181, 196, 197);
+    float: right;
+    width: 250px;
+    text-align: right;
+    line-height: 1.3em;
+    padding: 15px;
+}
+
+#footlist {
+    background-color: rgb(181, 196, 197);
+    display: inline-block;
+}
+
+ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+}
+
+li {
+    display: block;
+}
+
 #profilePic {
     display: block;
     height: 100%;
