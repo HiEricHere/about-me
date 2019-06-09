@@ -51,7 +51,7 @@ var q1to5 = function () {
   var answer1Wrong = 'Actually I spent last year behind a desk in a corporate office doing corporate things for corporate people.';
   //question 2
   var question2 = 'Am I from around here?';
-  var answer2Correct = 'That\'s right, I come from a strange land many may know as \'Texas\'';
+  var answer2Correct = 'That\'s right, I come from a strange land many may know as \'Texas\'.';
   var answer2Wrong = 'Sure wish, I moved here from Texas just a couple weeks ago!';
   //question 3
   var question3 = 'Am I over 20?';
@@ -62,12 +62,12 @@ var q1to5 = function () {
   var answer4Correct = 'Don\'t have to remind me :(';
   var answer4Wrong = 'Unfortunately those days have passed... :\'(';
   //question 5
-  var question5 = 'Do I prefer a perfect medium rare steak or a big breakfast on a beautiful sunday morning?';
-  var answer5Correct = 'right on.';
-  var answer5Wrong = 'cold tasteless noodles with a side of cardboard is my go to.';
-  //an array of all the questions
+  var question5 = 'Do I prefer a perfect medium rare steak or a big breakfast on a beautiful Sunday morning?';
+  var answer5Correct = 'Right on.';
+  var answer5Wrong = 'Cold tasteless noodles with a side of cardboard is my go to.';
+  //an array of all the questions and their answer
   var questionList = [[question1,'N'], [question2,'N'], [question3,'Y'], [question4,'N'], [question5,'Y']];
-  //an array of the correct and incorrect answers with indexes corresponding to its question index. [0] = correct [1] = wrong
+  //an array of feedback to provide user for both correct[0] and wrong[1]
   var feedbackList = [[answer1Correct, answer1Wrong] , [answer2Correct, answer2Wrong] , [answer3Correct, answer3Wrong] , [answer4Correct, answer4Wrong], [answer5Correct, answer5Wrong]];
   var playAgain = true;
 
@@ -81,7 +81,7 @@ var q1to5 = function () {
   }
 };
 
-//take user input and check if it's a number between lowerNum and higherNum and returns false if not a number/outside parameters or the number if it's within rules.
+//take user input and check if it's a number between lowerNum and higherNum and returns false. else return the number.
 var numberify = function (num, lowerNum, higherNum) {
   var numberified = parseInt(num, 10);
   if (isNaN(numberified) || numberified < lowerNum || numberified > higherNum) {
@@ -107,7 +107,7 @@ var guessTest = function( guess, answer ) {
 };
 
 var q6 = function () {
-  var guessNum = 5;
+  var guessNum = 4;
   var playAgain = true;
   //formula for random number between 0 - 20 inclusive taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
   var answer = Math.floor(Math.random() * (21));
@@ -118,14 +118,14 @@ var q6 = function () {
     userGuess = prompt('Guess a number between 0 and 20. You have ' + guessNum + ' tries left: ');
     numberified = numberify( userGuess, 0, 20 );
     if ( guessTest( numberified, answer ) ) {
-      guessNum = 5;
+      guessNum = 4;
       answer = Math.floor(Math.random() * (21));
       playAgain = confirm('Hey congrats you\'re like a psychic or something. Go again?');
     } else {
       guessNum -= 1;
     }
     if ( guessNum === 0 ) {
-      guessNum = 5;
+      guessNum = 4;
       answer = Math.floor(Math.random() * (21));
       playAgain = confirm('Looks like you\'re not going to be bending spoons anytime soon. Try again?');
     }
@@ -151,9 +151,9 @@ var checkArray = function ( num, tempArray ) {
 var scoreReport2 = function (score) {
   if ( score === 0 ) {
     return ' That\'s either some impressively good luck or really bad luck. Probably the latter. Don\'t worry we\'ve all never been there.';
-  } else if ( score > 0 && score <= 2 ) {
-    return ' That\'s about right, about average. Give yourself an average pat on the back.';
-  } else if ( score > 2 && score <= 4 ) {
+  } else if ( score > 0 && score <= 3 ) {
+    return ' That\'s about right, about average. Give yourself an average pat on the back for being average.';
+  } else if ( score === 4 ) {
     return ' Not bad. Maybe we should go to Vegas and win me some money.';
   } else {
     return ' Wow that\'s a bit scary. Does that mean you *can* read my thoughts?! Don\'t tell anyone else my dirty secrets, kay?';
@@ -165,7 +165,7 @@ var q7 = function () {
   var randNum;
   var userNum;
   var numberified;
-  alert('Let\'s waste some more time, ' + userName + '. Do you feel lucky? I\'ve got 5 numbers in my head between 0 and 10. How many can you guess right?');
+  alert('Let\'s waste some more time, ' + userName + '. Do you feel lucky? I\'ve got 5 numbers in my head between 0 and 10. How many can you guess correctly?');
   while ( playAgain === true ) {
     var answerArray = [];
     var userArray = [];
@@ -192,14 +192,15 @@ var q7 = function () {
       }
     }
     //compares user array and answer array and tallies up user score
-    for( var i = 0; i < answerArray.length; i++ ) {
+    for ( var i = 0; i < answerArray.length; i++ ) {
       for ( var n = 0; n < userArray.length; n++ ) {
         if ( answerArray[i] === userArray[n] ) {
           userScore++;
         }
       }
     }
-    playAgain = confirm('Well, ' + userName + ', it looks like you guessed ' + userScore + ' out of the 5 numbers I was thinking.' + scoreReport2(userScore) + ' Play again?');
+    playAgain = confirm('Well, ' + userName + ', it looks like you guessed ' + userScore + ' out of the 5 numbers I was thinking.' + scoreReport2(userScore) + ' Play again?\n\n' + 'My numbers: [' + answerArray + ']\n\n' + 'Your numbers: [' + userArray + ']');
+    //empties out the arrays if user is playing again
     if ( playAgain ) {
       for ( var x = 0; x < 5; x++ ) {
         answerArray.shift();
