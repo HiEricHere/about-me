@@ -1,254 +1,218 @@
 'use strict';
-//questions 1 - 5 variables
-var question1 = 'Did I take last year off traveling to remote regions of the world to experience new foods, connections and joys that the trappings of modern life can\'t provide, discover new perspectives and reflections about what\'s truly important in life and ultimately find inner peace in learning my place in this world?';
-var question2 = 'Am I from around here?';
-var question3 = 'Am I over 20?';
-var question4 = 'Am I under 30?';
-var question5 = 'Do I prefer a perfect medium rare steak or a big breakfast on a beautiful sunday morning?';
-var answer1Y = 'Actually I spent last year behind a desk in a corporate office doing corporate things for corporate people.';
-var answer1N = 'Thanks for the vote of confidence! :(';
-var answer2Y = 'Sure wish, I moved here from Texas just a couple weeks ago!';
-var answer2N = 'That\'s right, I come from a strange land many may know as \'Texas\'';
-var answer3Y = 'Yup';
-var answer3N = 'Wayyyy over 20';
-var answer4Y = 'Unfortunately those days have passed... :\'(';
-var answer4N = 'Don\'t have to remind me :(';
-var answer5Y = 'right on.';
-var answer5N = 'cold tasteless noodles with a side of cardboard is my go to.';
-var questionList = [question1, question2, question3, question4, question5];
-var answerList = [[answer1Y,answer1N] , [answer2Y,answer2N] , [answer3Y,answer3N] , [answer4Y,answer4N], [answer5Y,answer5N]];
-var userReminder = 'It\'s a Y/N question, by the way.';
-var inputYN;
-var inputAdjust;
-var i;
-//question 6 variables
-//formula for random number between 0 - 20 inclusive taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-//var answer6 = Math.floor(Math.random() * (21));
-var answer6 = 5;
-var guessq6 = 0;
-var userNum6;
-var userReminder6 = 'Has to be a whole number and between 0 and 20, by the way.';
-var numberProper;
-var responseGreater = 'Shooting too high! ';
-var responseLower = 'Need to go higher than that';
-var responseWin = 'Hey congrats you\'re like a psychic or something. Go again? (Y/N)';
-var responseLose = 'Looks like you\'re not going to be bending spoons anytime soon. Try again? (Y/N)';
-var playAgain6 = true;
-//question 7 variables
-var playAgain7 = true;
-var answer7 = [];
-var preNum7;
-var n;
-var dupeCount = 0;
-var userAnswer7 = [];
-var userPreNum7;
+//global variables
 var userName;
-var welcome1 = 'What was your name again? I forgot. Maybe again. I hope it\'s not too long or difficult.';
-var userReminder7 = 'Give me different numbers that are between 0 and 10';
-var score = 0;
+var playGame = confirm('Press OK to waste some time!');
 
-var playGame;
-playGame = confirm('Press OK to guess some silly things about me!');
-console.log('User decided to play: ', playGame);
-
-/* Guessing Game
-Question 1 - 5
-Uses an array of questions and a nested array of responses to user input answers - a nested array of 2 responses (for y and n) per array index.
-So each question has a matching answer in the answer array with responses for both yes/no replies.
-A for loop on the outside will run for the length of the question array. Each iteration of the for loop determines the question/answer by current index number.
-Inside this is a while loop that will run while the user's input is improper. An if statement checks if it's improper by seeing if the answer is not Y or N. 
-If its improper an alert is given, the while loop is still true and loops again. If a good answer is given the rest of the if statement executes and sets the
-answerProper variable to true which breaks the while loop. The outside for loop runs again and resets the answerProper loop to false.
-while(answerProper = false this while loop is true)
-   prompt for a proper response
-     if (answerProper is improper)
-     answerProper = false
-     alert user to input proper answer
-     else
-     take answer and run yes no replies
-     lastly set answerProper = true which breaks out of while loop
-
-Question 6 
-While loop runs while there are still tries remaining starting with 6 and if playAgain is true.
-Randomly generate a number 0 - 20. Prompt user for input. Convert answer to integer and check if valid: is integer and is 0 - 20.
-If improper, alert user and prompt again. If proper, check if correct. If not then check if answer is greater or lower and alert user. If correct, 
-give win message and ask if they want to play again. If not, set playAgain false and move on to question 7. If they run out of guesses, give lose message
-and ask if they want to play again. If not, set playAgain false and move to question 7. For all Y/N questions reuse the Y/N checker while loop and variables
-from questions 1-5.
-*/
-
-
-// this function takes in a string and check if that string starts with a y or n. THen either return false or the letter y or n
-
-var stringCheck = function(string) { 
+//this function takes in a string and checks if that string starts with a y or n. Then either return false or the letter Y or N
+var stringCheck = function(string) {
   var stringAdjust = string.toUpperCase().charAt(0);
-  if (stringAdjust === 'Y' || stringAdjust ==='N') { 
+  if (stringAdjust === 'Y' || stringAdjust === 'N') {
     return stringAdjust;
-  } else { 
+  } else {
     return false;
   }
-}
+};
 
-// Use a for loop to loop through questions 1 and 5 
-var q1to5 = function() { 
-  for (var i = 0; i < questionList.length; i++) { 
-    inputYN = stringCheck(prompt(questionList[i]));
-    if (inputYN === false) { 
-      alert(userReminder);
-    } else if (inputYN === 'Y') { 
-      alert(answerList[i][0]);
-    } else { 
-      alert(answerList[i][1]);
-    }
+//this function takes a question, the answer, and feedback array. It gives user a message and returns a score.
+var askQuestion = function( question, answer, feedback ) {
+  var guess = stringCheck(prompt(question));
+  if (guess === false) {
+    alert('It\'s a Y/N question, by the way.');
+    return 0;
+  } else if (guess === answer) {
+    alert(feedback[0]);
+    return 1;
+  } else {
+    alert(feedback[1]);
+    return 0;
   }
-}
+};
 
-// check user input to see if they get the right random number or not. Tell them if the guess is too high or low or NaN or more than 20. THen ask if they want to play again after the game is over. 
-var q6 = function() { 
-  while (guessq6 < 5 && playAgain6 === true) {
-    userNum6 = prompt('Pretend you\'re 5 years old for a sec and guess a number between 0 and 20: ');
-    numberProper = parseInt(userNum6, 10);
-    console.log('adjusted number: ', numberProper);
-    if (isNaN(numberProper) || numberProper > 20) {
-      guessq6++;
-      alert(userReminder6);
-    } else if (numberProper === answer6) {
-      answerProper = false;
-      while (answerProper === false) {
-        inputYN = prompt(responseWin);
-        inputAdjust = inputYN.toUpperCase().charAt(0);
-        if (inputAdjust !== 'Y' && inputAdjust !== 'N'){
-          alert(userReminder);
-        } else if (inputAdjust === 'Y') {
-          guessq6 = 0;
-          answer6 = Math.floor(Math.random() * (21));
-          console.log('new number is :', answer6);
-          answerProper = true;
-        } else {
-          playAgain6 = false;
-          answerProper = true;
-        }
-      }
-    } else if (numberProper > answer6) {
-      guessq6++;
-      alert(responseGreater);
+//this function takes score count and gives feedback
+var scoreReport1 = function(score) {
+  var summary = 'You got ' + score + ' out of 5 right, ' + userName + '.';
+  if (score === 0) {
+    alert(summary + ' Does that mean I\'m enigmatic and mysterious in a brooding and smoldering kind of way?\n\n9/10 experts say \'Maybe. What\'s for lunch?\'');
+  } else if (score > 0 && score <= 2) {
+    alert(summary + ' I\'m kind of a big deal so you should try again.');
+  } else if (score > 2 && score <= 4) {
+    alert(summary + ' Was this your first try? High five!');
+  } else {
+    alert(summary + ' You know basically everything about me! Great jo--wait is that a good thing? Can my entire existence be neatly summarized into 5 questions?\n\n9/10 experts agree that cash only restaurants are evil.');
+  }
+};
+
+// question 1 - 5 function. I found the if else code block to be repeating in each question code block
+// with no variation so I felt a for loop to be appropriate in this situation.
+var q1to5 = function () {
+  //question 1
+  var question1 = 'Did I take last year off traveling to remote regions of the world to experience new foods, connections and joys that the trappings of modern life can\'t provide, discover new perspectives and reflections about what\'s truly important in life and ultimately find inner peace in learning my place in this world?';
+  var answer1Correct = 'Thanks for the vote of confidence! :(';
+  var answer1Wrong = 'Actually I spent last year behind a desk in a corporate office doing corporate things for corporate people.';
+  //question 2
+  var question2 = 'Am I from around here?';
+  var answer2Correct = 'That\'s right, I come from a strange land many may know as \'Texas\'';
+  var answer2Wrong = 'Sure wish, I moved here from Texas just a couple weeks ago!';
+  //question 3
+  var question3 = 'Am I over 20?';
+  var answer3Correct = 'Yup';
+  var answer3Wrong = 'Wayyyy over 20';
+  //question 4
+  var question4 = 'Am I under 30?';
+  var answer4Correct = 'Don\'t have to remind me :(';
+  var answer4Wrong = 'Unfortunately those days have passed... :\'(';
+  //question 5
+  var question5 = 'Do I prefer a perfect medium rare steak or a big breakfast on a beautiful sunday morning?';
+  var answer5Correct = 'right on.';
+  var answer5Wrong = 'cold tasteless noodles with a side of cardboard is my go to.';
+  //an array of all the questions
+  var questionList = [[question1,'N'], [question2,'N'], [question3,'Y'], [question4,'N'], [question5,'Y']];
+  //an array of the correct and incorrect answers with indexes corresponding to its question index. [0] = correct [1] = wrong
+  var feedbackList = [[answer1Correct, answer1Wrong] , [answer2Correct, answer2Wrong] , [answer3Correct, answer3Wrong] , [answer4Correct, answer4Wrong], [answer5Correct, answer5Wrong]];
+  var playAgain = true;
+
+  while ( playAgain === true ) {
+    var userScore = 0;
+    for (var i = 0; i < questionList.length; i++) {
+      userScore += askQuestion(questionList[i][0], questionList[i][1], feedbackList[i]);
+    }
+    scoreReport1(userScore);
+    playAgain = confirm('Want to try again?');
+  }
+};
+
+//take user input and check if it's a number between lowerNum and higherNum and returns false if not a number/outside parameters or the number if it's within rules.
+var numberify = function (num, lowerNum, higherNum) {
+  var numberified = parseInt(num, 10);
+  if (isNaN(numberified) || numberified < lowerNum || numberified > higherNum) {
+    return false;
+  } else {
+    return numberified;
+  }
+};
+
+var guessTest = function( guess, answer ) {
+  if ( guess === false ) {
+    alert('Guess a *number* between 0 and 20.');
+    return false;
+  } else if ( guess > answer ) {
+    alert('Shooting too high there, Tex.');
+    return false;
+  } else if ( guess < answer ) {
+    alert('Are your guesses as low as your self esteem or something? Go higher!');
+    return false;
+  } else if ( guess === answer ) {
+    return true;
+  }
+};
+
+var q6 = function () {
+  var guessNum = 5;
+  var playAgain = true;
+  //formula for random number between 0 - 20 inclusive taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+  var answer = Math.floor(Math.random() * (21));
+  var userGuess;
+  var numberified;
+  alert('Let\'s try something different, ' + userName + '. Let\'s test your mind reading skills.');
+  while ( guessNum > 0 && playAgain === true ) {
+    userGuess = prompt('Guess a number between 0 and 20. You have ' + guessNum + ' tries left: ');
+    numberified = numberify( userGuess, 0, 20 );
+    if ( guessTest( numberified, answer ) ) {
+      guessNum = 5;
+      answer = Math.floor(Math.random() * (21));
+      playAgain = confirm('Hey congrats you\'re like a psychic or something. Go again?');
     } else {
-      guessq6++;
-      alert(responseLower);
+      guessNum -= 1;
     }
-    if (guessq6 === 5) {
-      answerProper = false;
-      while (answerProper === false) {
-        inputYN = prompt(responseLose);
-        inputAdjust = inputYN.toUpperCase().charAt(0);
-        if (inputAdjust !== 'Y' && inputAdjust !== 'N'){
-          alert(userReminder);
-        } else if (inputAdjust === 'Y') {
-          guessq6 = 0;
-          answer6 = Math.floor(Math.random() * (21));
-          console.log('new number is :', answer6);
-          answerProper = true;
-        } else {
-          playAgain6 = false;
-          answerProper = true;
+    if ( guessNum === 0 ) {
+      guessNum = 5;
+      answer = Math.floor(Math.random() * (21));
+      playAgain = confirm('Looks like you\'re not going to be bending spoons anytime soon. Try again?');
+    }
+  }
+};
+
+//this function takes a number and an array and checks if the number exists in the array and returns true or false
+var checkArray = function ( num, tempArray ) {
+  var dupeCount = 0;
+  for ( var i = 0; i <= tempArray.length; i++ ) {
+    if ( num === tempArray[i] ) {
+      dupeCount++;
+    }
+  }
+  if ( dupeCount > 0 ) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+//this function takes the user score and returns a different response
+var scoreReport2 = function (score) {
+  if ( score === 0 ) {
+    return ' That\'s either some impressively good luck or really bad luck. Probably the latter. Don\'t worry we\'ve all never been there.';
+  } else if ( score > 0 && score <= 2 ) {
+    return ' That\'s about right, about average. Give yourself an average pat on the back.';
+  } else if ( score > 2 && score <= 4 ) {
+    return ' Not bad. Maybe we should go to Vegas and win me some money.';
+  } else {
+    return ' Wow that\'s a bit scary. Does that mean you *can* read my thoughts?! Don\'t tell anyone else my dirty secrets, kay?';
+  }
+};
+
+var q7 = function () {
+  var playAgain = true;
+  var randNum;
+  var userNum;
+  var numberified;
+  alert('Let\'s waste some more time, ' + userName + '. Do you feel lucky? I\'ve got 5 numbers in my head between 0 and 10. How many can you guess right?');
+  while ( playAgain === true ) {
+    var answerArray = [];
+    var userArray = [];
+    var userScore = 0;
+    //creates the answer array of 5 unique numbers 0-10
+    console.log(answerArray.length);
+    while ( answerArray.length < 5 ) {
+      randNum = Math.floor(Math.random() * 11);
+      if ( checkArray(randNum, answerArray) === true ) {
+        answerArray.push(randNum);
+      }
+    }
+    //asks user for 5 unique numbers 0-10 and creates an array of them
+    console.log(userArray.length);
+    while ( userArray.length < 5 ) {
+      userNum = prompt('I have ' + userArray.length + ' numbers so far. I need ' + (5 - userArray.length) + ' more, ' + userName + ':');
+      numberified = numberify(userNum, 0, 10);
+      if ( numberified === false ) {
+        alert('I need a *number* between 0 and 10.');
+      } else if ( checkArray(numberified, userArray) === false ) {
+        alert('You\'ve already given me this number, ' + userName + '.');
+      } else {
+        userArray.push(numberified);
+      }
+    }
+    //compares user array and answer array and tallies up user score
+    for( var i = 0; i < answerArray.length; i++ ) {
+      for ( var n = 0; n < userArray.length; n++ ) {
+        if ( answerArray[i] === userArray[n] ) {
+          userScore++;
         }
+      }
+    }
+    playAgain = confirm('Well, ' + userName + ', it looks like you guessed ' + userScore + ' out of the 5 numbers I was thinking.' + scoreReport2(userScore) + ' Play again?');
+    if ( playAgain ) {
+      for ( var x = 0; x < 5; x++ ) {
+        answerArray.shift();
+        userArray.shift();
       }
     }
   }
-}
-
-var q7 = function() { 
-   //question 7
-  /*
-  generate 5 numbers between 0 and 10 using a for loop and push into an array. check if a number is being double counted.
-  prompt user for name and 5 numbers between 0 and 10. check if number is valid: integer and between 0 and 10.
-  push user numbers into an array and match against winning number array. +1 score for each correct guess.
-  Give user score report with their name and score. Ask if they want to play again.*/
-  while (playAgain7 === true) {
-    //create hidden answer array
-    while (answer7.length < 5) {
-      preNum7 = Math.floor(Math.random() * 11);
-      for (n = 0; n <= answer7.length; n++) {
-        if (preNum7 === answer7[n]) {
-          dupeCount++;
-        }
-      }
-      if (dupeCount > 0) {
-        dupeCount = 0;
-      } else {
-        answer7.push(preNum7);
-      }
-    }
-    console.log(answer7);
-    //create user answer array
-    //userName = prompt(welcome1);
-    userName = prompt(welcome1);
-    console.log(userName);
-    alert('Thanks, ' + userName + ', I totally won\'t stalk your social media now. I\'m thinking of 5 numbers between 0 and 10. Give me 5 different numbers one at a time, and we\'ll see how many you can get right.');
-    while (userAnswer7.length < 5) {
-      userPreNum7 = prompt('I have ' + userAnswer7.length + ' number(s) right now, need ' + (5 - userAnswer7.length) + ' more: ');
-      numberProper = parseInt(userPreNum7, 10);
-      if (isNaN(numberProper) || numberProper > 10) {
-        alert(userReminder7);
-      } else {
-        for (n = 0; n <= userAnswer7.length; n++) {
-          if (numberProper === userAnswer7[n]) {
-            dupeCount++;
-          }
-        }
-        if (dupeCount > 0) {
-          dupeCount = 0;
-          alert(userReminder7);
-        } else {
-          userAnswer7.push(numberProper);
-        }
-      }
-    }
-    /* testing array for loop
-    var x;
-    for (x = 0; x < userAnswer7.length; x++) {
-      console.log(userAnswer7[x]);
-    }
-    */
-    //check hidden answers against user answers
-    for(n = 0; n < answer7.length; n++) {
-      for (var x = 0; x < userAnswer7.length; x++) {
-        if(answer7[n] === userAnswer7[x]) {
-          score = score + 1;
-        }
-      }
-    }
-    console.log(score);
-    //show score results and restart
-    answerProper = false;
-    while (answerProper === false) {
-      inputYN = prompt('So, ' + userName + ', it looks like you got ' + score + ' out of ' + answer7.length + ' right. Whoever coded me is too tired to check if that\'s impressive or not so pat yourself on the back for a participation reward. Do you want to play again? (Y/N): ');
-      inputAdjust = inputYN.toUpperCase().charAt(0);
-      if (inputAdjust !== 'Y' && inputAdjust !== 'N'){
-        alert(userReminder);
-      } else if (inputAdjust === 'Y') {
-        for(n = 0; n < 5; n++) {
-          answer7.shift();
-          userAnswer7.shift();
-        }
-        answerProper = true;
-      } else {
-        playAgain7 = false;
-        answerProper = true;
-      }
-    }
-  }
-}
-
-var answerProper;
+};
 
 if (playGame) {
-  
-  //question 1 - 5
+  userName = prompt('What\'s your name by the way?');
   q1to5();
-  
-  // //question 6
   q6();
   q7();
- 
+  alert('Thanks for playing!');
 }
