@@ -118,16 +118,16 @@ var q6 = function () {
     userGuess = prompt('Guess a number between 0 and 20. You have ' + guessNum + ' tries left: ');
     numberified = numberify( userGuess, 0, 20 );
     if ( guessTest( numberified, answer ) ) {
+      playAgain = confirm('Hey congrats you\'re like a psychic or something. Go again?');
       guessNum = 4;
       answer = Math.floor(Math.random() * (21));
-      playAgain = confirm('Hey congrats you\'re like a psychic or something. Go again?');
     } else {
       guessNum -= 1;
     }
     if ( guessNum === 0 ) {
+      playAgain = confirm('The answer was ' + answer + '. Looks like you\'re not going to be bending spoons with your mind anytime soon, ' + userName + '. Try again?');
       guessNum = 4;
       answer = Math.floor(Math.random() * (21));
-      playAgain = confirm('Looks like you\'re not going to be bending spoons anytime soon. Try again?');
     }
   }
 };
